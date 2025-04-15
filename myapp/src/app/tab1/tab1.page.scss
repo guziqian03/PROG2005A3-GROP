@@ -1,0 +1,266 @@
+/* General Styles */
+ion-title {
+  margin-left: 100px;
+}
+
+/* Custom Toolbar */
+.custom-toolbar {
+  --background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+  --color: white;
+}
+
+/* Page Content */
+.custom-content {
+  --background: #f8fafc;
+}
+
+/* Skeleton loading */
+.skeleton-container {
+  padding: 16px;
+
+  .skeleton-header,
+  .skeleton-row {
+    height: 56px;
+    background: #e2e8f0;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    animation: pulse 1.5s infinite;
+  }
+
+  .skeleton-row {
+    height: 72px;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Table Styling */
+.table-wrapper {
+  padding: 16px;
+  margin-left: 100px;
+}
+
+.data-table {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+/* Table Header */
+.table-header {
+  background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+  color: white;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  ion-col {
+    padding: 16px 12px;
+  }
+}
+
+/* Table Row */
+.table-row {
+  border-bottom: 1px solid #f1f5f9;
+  transition: all 0.3s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: #f8fafc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  &.low-stock {
+    background-color: #fff7ed;
+  }
+
+  ion-col {
+    padding: 14px 12px;
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #334155;
+  }
+}
+
+/* Special Cell Styles */
+.product-cell .product-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.product-icon {
+  font-size: 1.4rem;
+  color: #3a7bd5;
+  background: #e0f2fe;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.product-name {
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.product-id {
+  font-size: 0.7rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.category-cell {
+  font-weight: 500;
+  color: #475569;
+}
+
+.numeric {
+  justify-content: flex-end;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.price-cell {
+  font-weight: 600;
+  color: #10b981;
+}
+
+.stock-cell {
+  font-weight: 500;
+}
+
+.notes-cell .notes-content {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  color: #64748b;
+}
+
+.supplier-cell .supplier-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.supplier-icon {
+  color: #8b5cf6;
+}
+
+.status-cell {
+  justify-content: center;
+}
+
+/* Status Badge */
+.status-badge {
+  padding: 6px 10px;
+  border-radius: 16px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &.in-stock {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  &.out-of-stock {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+}
+
+/* Action Cell */
+.action-cell {
+  justify-content: center;
+
+  ion-button {
+    --padding-start: 0;
+    --padding-end: 0;
+    --color: #64748b;
+
+    &:hover {
+      --color: #3a7bd5;
+    }
+  }
+}
+
+/* Floating Action Button */
+ion-fab-button {
+  --background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+  --box-shadow: 0 4px 16px rgba(58, 123, 213, 0.3);
+
+  ion-icon {
+    color: white;
+  }
+}
+
+/* Help Button Floating */
+.help-button-floating {
+  position: fixed;
+  margin-left: 90%;
+  margin-top: 45%;
+  height: 50px;
+  width: 50px;
+  background-color: var(--ion-color-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  cursor: pointer;
+
+  .icon {
+    font-size: 80px;
+    color: white;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+  }
+}
+
+/* Help Popup */
+.help-popup {
+  display: none;
+  position: fixed;
+  margin-top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 2000;
+  width: 300px;
+  max-width: 90%;
+
+  .popup-content {
+    text-align: center;
+  }
+
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: var(--ion-color-primary);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--ion-color-primary-dark);
+    }
+  }
+}
