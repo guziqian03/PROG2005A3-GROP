@@ -1,0 +1,114 @@
+ion-title{
+    margin-left: 100px;
+}
+/* Add to your component's SCSS file */
+.privacy-container {
+    padding: 16px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .privacy-card {
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    margin-bottom: 24px;
+  }
+  
+  ion-card-header {
+    background: var(--ion-color-primary);
+    color: white;
+    padding: 20px 16px;
+    
+    ion-card-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+    
+    ion-card-subtitle {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+    }
+  }
+  
+  .privacy-section {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f0f0f0;
+    
+    &:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+  }
+  
+  .section-title {
+    display: flex;
+    align-items: center;
+    color: var(--ion-color-primary);
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    
+    .icon {
+      margin-right: 8px;
+      font-size: 1.2rem;
+    }
+  }
+  
+  .privacy-list {
+    padding-left: 20px;
+    margin: 12px 0;
+    
+    li {
+      margin-bottom: 8px;
+      line-height: 1.5;
+      color: #444;
+    }
+  }
+  
+  .contact-section {
+    text-align: center;
+    margin-top: 32px;
+    
+    .contact-btn {
+      --border-color: var(--ion-color-primary);
+      --color: var(--ion-color-primary);
+      margin-bottom: 16px;
+    }
+    
+    .update-text {
+      color: #888;
+      font-size: 0.8rem;
+      margin-top: 8px;
+    }
+  }
+
+
+
+
+
+  .help-button-floating {
+    position: fixed;
+margin-left: 90%;
+margin-top: 45%;
+height: 50px;
+width: 50px;
+    background-color: var(--ion-color-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    cursor: pointer;
+  
+    .icon {
+      font-size: 80px;
+      color: white;
+    }
+  
+    &:hover {
+      transform: scale(1.1);
+      transition: transform 0.2s ease;
+    }
+  }
+  
