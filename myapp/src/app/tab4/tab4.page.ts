@@ -5,10 +5,7 @@ import { ExploreContainerComponent } from '../explore-container/explore-containe
 import { HelpsComponent } from '../helps/helps.component';
 import { addIcons } from 'ionicons';
 import { 
-  lockClosed, 
-  shieldCheckmark, 
-  documentText, 
-  mail,
+
   helpCircle 
 } from 'ionicons/icons';
 
@@ -34,13 +31,10 @@ import {
     ExploreContainerComponent
   ],
 })
+
 export class Tab4Page {
   constructor() {
     addIcons({
-      lockClosed,
-      shieldCheckmark,
-      documentText,
-      mail,
       helpCircle
     });
   }
