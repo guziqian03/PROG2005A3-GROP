@@ -1,17 +1,107 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 1
-    </ion-title>
+  <ion-toolbar class="custom-toolbar">
+    <ion-title class="page-title">Inventory Records</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="custom-content">
+  <!-- 过滤条件下拉框 -->
+  <div class="filter-container" style="margin-left: 100px;">
+    <ion-select
+      interface="action-sheet"
+      (ionChange)="onFilterChange($event)"
+      [value]="filterCondition"
+      style="border: 1px solid #ccc; border-radius: 8px; padding: 5px;"
+    >
+      <ion-select-option *ngFor="let option of filterOptions" [value]="option.value">
+        {{ option.label }}
+      </ion-select-option>
+    </ion-select>
+  </div>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <!-- 搜索框 -->
+  <div style="margin-left: 100px; margin-top: 50px;">
+    <input
+      type="text"
+      #searchInput
+      placeholder="Enter product name"
+      style="border-radius: 10px; height: 30px; margin-left: 5px; width: 20%;"
+    />
+    <button
+      (click)="searchItems(searchInput.value)"
+      style="background-color: aquamarine; color: white; padding: 8px; margin-left: 10px; border-radius: 6px;"
+    >
+      Search
+    </button>
+  </div>
+
+  <!-- Loading skeleton -->
+  <div *ngIf="items.length === 0" class="skeleton-container">
+    <div class="skeleton-header"></div>
+    <div *ngFor="let item of [1,2,3,4,5]" class="skeleton-row"></div>
+  </div>
+
+  <!-- 数据表格 -->
+  <div class="table-wrapper">
+    <ion-grid class="data-table">
+      <ion-row class="table-header">
+        <ion-col size="2.5" class="header-cell">PRODUCT</ion-col>
+        <ion-col size="1.5" class="header-cell">CATEGORY</ion-col>
+        <ion-col size="1" class="header-cell numeric">PRICE</ion-col>
+        <ion-col size="1" class="header-cell numeric">STOCK</ion-col>
+        <ion-col size="2" class="header-cell">NOTES</ion-col>
+        <ion-col size="2" class="header-cell">SUPPLIER</ion-col>
+        <ion-col size="1" class="header-cell">STATUS</ion-col>
+        <ion-col size="1" class="header-cell action-cell">ACTIONS</ion-col>
+      </ion-row>
+
+      <ion-row *ngFor="let item of filteredItems" class="table-row" [class.low-stock]="item.quantity > 0 && item.quantity < 5">
+        <ion-col size="2.5" class="product-cell">
+          <div class="product-info">
+            <ion-icon name="cube" class="product-icon"></ion-icon>
+            <div>
+              <div class="product-name">{{ item.item_name || 'Unnamed Product' }}</div>
+              <div class="product-id">ID: {{ item.item_id || 'N/A' }}</div>
+            </div>
+          </div>
+        </ion-col>
+        <ion-col size="1.5" class="category-cell">{{ item.category || 'N/A' }}</ion-col>
+        <ion-col size="1" class="numeric price-cell">¥{{ item.price }}</ion-col>
+        <ion-col size="1" class="numeric stock-cell">{{ item.quantity || 0 }}</ion-col>
+        <ion-col size="2" class="notes-cell">
+          <div class="notes-content">{{ item.special_note || 'No notes available' }}</div>
+        </ion-col>
+        <ion-col size="2" class="supplier-cell">
+          <div class="supplier-info">
+            <ion-icon name="business" class="supplier-icon"></ion-icon>
+            {{ item.supplier_name || 'Unknown Supplier' }}
+          </div>
+        </ion-col>
+        <ion-col size="1" class="status-cell">
+          <span class="status-badge" [class.in-stock]="item.quantity > 0" [class.out-of-stock]="item.quantity <= 0">
+            {{ item.quantity > 0 ? (item.quantity < 5 ? 'Low Stock' : 'In Stock') : 'Out of Stock' }}
+          </span>
+        </ion-col>
+        <ion-col size="1" class="action-cell">
+          <ion-button >
+            <ion-icon name="create" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
 </ion-content>
+
+<!-- 帮助按钮 -->
+<div class="help-button-floating" (click)="showHelpPopup()">
+  <ion-icon name="help-circle" class="icon">222222222222</ion-icon>
+</div>
+
+<!-- 帮助弹窗 -->
+<div id="help-popup" class="help-popup">
+  <div class="popup-content">
+    <h2>Help Information</h2>
+    <p>Here is some help-related information about using the app.</p>
+    <button (click)="closeHelpPopup()">Close</button>
+  </div>
+</div>
