@@ -85,30 +85,59 @@ ion-title{
 
 
 
+/* Help Button Floating */
+.help-button-floating {
+  position: fixed;
+  margin-left: 90%;
+  margin-top: 45%;
+  height: 50px;
+  width: 50px;
+  background-color: var(--ion-color-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  cursor: pointer;
 
-  .help-button-floating {
-    position: fixed;
-margin-left: 90%;
-margin-top: 45%;
-height: 50px;
-width: 50px;
-    background-color: var(--ion-color-primary);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    cursor: pointer;
-  
-    .icon {
-      font-size: 80px;
-      color: white;
-    }
-  
-    &:hover {
-      transform: scale(1.1);
-      transition: transform 0.2s ease;
-    }
+  .icon {
+    font-size: 80px;
+    color: white;
   }
-  
+
+  &:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+  }
+}
+
+/* Help Popup */
+.help-popup {
+  display: none;
+  position: fixed;
+  margin-top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 2000;
+  width: 300px;
+  max-width: 90%;
+
+  .popup-content {
+    text-align: center;
+  }
+
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: var(--ion-color-primary);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+  }
+}
