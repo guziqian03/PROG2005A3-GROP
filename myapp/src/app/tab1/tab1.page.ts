@@ -20,7 +20,7 @@ import {
   IonSelectOption
 } from '@ionic/angular/standalone';
 import { ApiService } from '../../service/api.service';
-import { addIcons } from 'ionicons';  // 用于注册图标
+import { addIcons } from 'ionicons';  // For registration icon
 import { helpCircle, cube, business, create } from 'ionicons/icons';
 
 @Component({
@@ -50,12 +50,13 @@ import { helpCircle, cube, business, create } from 'ionicons/icons';
   ]
 })
 export class Tab1Page {
-  items: any[] = []; // 所有数据
-  filteredItems: any[] = []; // 过滤后的数据
-  filterCondition: string = 'all'; // 过滤条件
-  searchTerm: string = ''; // 搜索关键字
+  items: any[] = []; // All data
+  filteredItems: any[] = []; // Filtered data
+  recommendedItems: any[] = []; // Recommended product data
+  filterCondition: string = 'all'; // Filters
+  searchTerm: string = ''; //Search Keywords
 
-  // 过滤条件选项
+  // Filter options
   filterOptions = [
     { value: 'all', label: 'All' },
     { value: 'in-stock', label: 'In Stock' },
@@ -64,24 +65,41 @@ export class Tab1Page {
   ];
 
   constructor(private apiService: ApiService) {
-    addIcons({cube,business,create,helpCircle}); // 注册帮助图标
+    addIcons({cube,business,create,helpCircle}); // Registration help icon
   }
+
+
+    // Randomly generate data
+    generateRecommendedItems() {
+    const randomRecommendedCount = Math.floor(Math.random() * 3) + 3; // Randomly generate 3 to 5 rows of recommended products
+    const shuffledItems = [...this.items]; // Copying an array to avoid modifying the original
+    this.recommendedItems = [];
+
+    // Randomly select recommended products
+    for (let i = 0; i < randomRecommendedCount; i++) {
+      const randomIndex = Math.floor(Math.random() * shuffledItems.length);
+      this.recommendedItems.push(shuffledItems[randomIndex]);
+      shuffledItems.splice(randomIndex, 1); // Make sure you don’t repeat the selection
+    }
+  }
+
 
   ngOnInit() {
     this.loadItems();
   }
 
-  // 加载数据
+  // Loading data
   loadItems() {
     this.apiService.getAllItems().subscribe(
       (data) => {
         this.items = data;
-        this.applyFilter(); // 初始化时应用过滤
+        this.applyFilter(); // Apply filtering on initialization
         console.log('Items loaded:', this.items);
+        this.generateRecommendedItems(); // Generate recommended products using test data
       },
       (error) => {
         console.error('Error fetching items:', error);
-        // 临时添加测试数据
+        // Temporarily add test data
         this.items = [
           {
             item_id: 1,
@@ -94,16 +112,17 @@ export class Tab1Page {
             stock_status: '有货'
           }
         ];
-        this.applyFilter(); // 初始化时应用过滤
+        this.generateRecommendedItems(); // Generate recommended products using test data
+        this.applyFilter(); // Apply filtering on initialization
       }
     );
   }
 
-  // 根据条件过滤数据
+  // Apply filtering on initialization
   applyFilter() {
     let filtered = this.items;
 
-    // 应用过滤条件
+    // Apply filters
     if (this.filterCondition === 'in-stock') {
       filtered = filtered.filter(item => item.quantity > 0);
     } else if (this.filterCondition === 'out-of-stock') {
@@ -112,7 +131,7 @@ export class Tab1Page {
       filtered = filtered.filter(item => item.quantity > 0 && item.quantity < 5);
     }
 
-    // 应用搜索条件
+    // Apply search criteria
     if (this.searchTerm) {
       const lowerCaseSearchTerm = this.searchTerm.toLowerCase();
       filtered = filtered.filter(item =>
@@ -123,29 +142,29 @@ export class Tab1Page {
     this.filteredItems = filtered;
   }
 
-  // 处理过滤条件变化
+  // Handling filter changes
   onFilterChange(event: any) {
     this.filterCondition = event.detail.value;
     this.applyFilter();
   }
 
-  // 处理搜索
+  // Processing Search
   searchItems(searchTerm: string): void {
     this.searchTerm = searchTerm;
     this.applyFilter();
   }
 
-  // 显示帮助弹窗
+
   showHelpPopup(): void {
-    const helpPopup = document.getElementById('help-popup') as HTMLElement;
+    const helpPopup = document.getElementById('help-popup1') as HTMLElement;
     if (helpPopup) {
       helpPopup.style.display = 'block';
     }
   }
 
-  // 关闭帮助弹窗
+
   closeHelpPopup(): void {
-    const helpPopup = document.getElementById('help-popup') as HTMLElement;
+    const helpPopup = document.getElementById('help-popup1') as HTMLElement;
     if (helpPopup) {
       helpPopup.style.display = 'none';
     }
