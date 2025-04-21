@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormsModule, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { addIcons } from 'ionicons';  // 用于注册图标
+import { addIcons } from 'ionicons';
 import { helpCircle, addOutline, cube, business, create } from 'ionicons/icons';
-
+import { AlertController } from '@ionic/angular/standalone';
 import { 
+
   IonHeader, 
   IonToolbar, 
   IonTitle, 
@@ -63,30 +64,46 @@ export class Tab2Page {
   filteredItems: any[] = [];
   isModalOpen = false;
 
-  // 定义类别选项
+  // Defining Category Options
   categories = ['Electronics', 'Tools', 'Furniture', 'Miscellaneous'];
+  // Defining Status Options
+  statusOptions = ['In Stock', 'Out of Stock', 'Low Stock'];
+
+  // Add new methods to the Tab2Page class
+  checkDuplicateItemName(itemName: string): boolean {
+    return this.items.some(item => item.item_name.toLowerCase() === itemName.toLowerCase());
+  }
 
   itemForm: FormGroup = this.formBuilder.group({
-    item_name: ['', [Validators.required, this.noNumberValidator]], // 禁止输入数字
-    category: ['', Validators.required], // 改为下拉框
-    price: ['', [Validators.required, Validators.min(0)]], // 必须为数字且大于等于0
-    quantity: ['', [Validators.required, Validators.min(0)]], // 必须为数字且大于等于0
-    special_note: [''], // 无特殊校验
-    supplier_name: ['', [Validators.required, this.noNumberValidator]], // 禁止输入数字
+    item_name: ['', [Validators.required, this.notOnlyNumbersValidator]], // 修改为新的验证器
+    category: ['', Validators.required],
+    price: ['', [Validators.required, Validators.min(0)]],
+    quantity: ['', [Validators.required, Validators.min(0)]],
+    special_note: [''],
+    supplier_name: ['', [Validators.required, this.noNumberValidator]],
+    stock_status: ['', Validators.required]
   });
-
+// New validator: cannot be all numbers
+notOnlyNumbersValidator(control: AbstractControl): ValidationErrors | null {
+  if (!control.value) return null;
+  
+  // Checks if it contains only numbers
+  const isOnlyNumbers = /^\d+$/.test(control.value);
+  
+  return isOnlyNumbers ? { onlyNumbers: true } : null;
+}
   constructor(
     private apiService: ApiService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private alertController: AlertController
   ) {
-    addIcons({addOutline,cube,business,create,helpCircle}); // 注册帮助图标
+    addIcons({addOutline,cube,business,create,helpCircle});
   }
 
   ngOnInit() {
     this.loadItems();
   }
 
-  // 加载商品数据
   loadItems() {
     this.apiService.getAllItems().subscribe(
       (data) => {
@@ -98,69 +115,85 @@ export class Tab2Page {
         this.items = [
           {
             item_id: 1,
-            item_name: '测试商品',
-            category: '测试类别',
+            item_name: 'Test Product',
+            category: 'Test Category',
             price: 100,
             quantity: 10,
-            special_note: '测试备注',
-            supplier_name: '测试供应商',
-            stock_status: '有货'
+            special_note: 'Test Note',
+            supplier_name: 'Test Supplier',
+            stock_status: 'In Stock'
           }
         ];
       }
     );
   }
 
-  // 打开模态框
   openModal() {
     this.isModalOpen = true;
   }
-  // 显示帮助弹窗
-  showHelpPopup(): void {
-    const helpPopup = document.getElementById('help-popup') as HTMLElement;
-    if (helpPopup) {
-      helpPopup.style.display = 'block';
-    }
-  }
 
-  // 关闭帮助弹窗
-  closeHelpPopup(): void {
-    const helpPopup = document.getElementById('help-popup') as HTMLElement;
-    if (helpPopup) {
-      helpPopup.style.display = 'none';
-    }
-  }
-  // 关闭模态框
   closeModal() {
     this.isModalOpen = false;
     this.itemForm.reset();
   }
 
-  // 提交表单
-  submitForm() {
-    if (this.itemForm.valid) {
-      const newItem = {
-        ...this.itemForm.value,
-        featured_item: 1,
-        stock_status: this.itemForm.value.quantity > 0 ? 'In Stock' : 'Out of Stock'
-      };
 
-      this.apiService.createItem(newItem).subscribe(
-        (response) => {
-          console.log('Item created successfully:', response);
-          this.loadItems();
-          this.closeModal();
-        },
-        (error) => {
-          console.error('Error creating item:', error);
-        }
-      );
+  
+// Modify the submitForm method
+async submitForm() {
+  if (this.itemForm.valid) {
+    const newItemName = this.itemForm.get('item_name')?.value;
+    
+    // Check if the product name is repeated
+    if (this.checkDuplicateItemName(newItemName)) {
+      // Creating and displaying alerts using AlertController
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message: 'Product name already exists. Please use a different name.',
+        buttons: ['OK']
+      });
+
+      await alert.present();
+      return; // If duplicate, stop submitting
     }
-  }
 
-  // 自定义校验器：禁止输入数字
+    const newItem = {
+      ...this.itemForm.value,
+      featured_item: 1
+    };
+
+    this.apiService.createItem(newItem).subscribe(
+      (response) => {
+        console.log('Item created successfully:', response);
+        this.loadItems();
+        this.closeModal();
+      },
+      (error) => {
+        console.error('Error creating item:', error);
+      }
+    );
+  }
+}
+
+
   noNumberValidator(control: any) {
     const hasNumber = /\d/.test(control.value);
     return hasNumber ? { hasNumber: true } : null;
   }
+
+showHelpPopup(): void {
+  const helpPopup = document.getElementById('help-popup');
+  if (helpPopup) {
+    helpPopup.style.display = 'block';
+    document.body.style.overflow = 'hidden'; //Prevent background scrolling
+  }
+}
+
+closeHelpPopup(): void {
+  const helpPopup = document.getElementById('help-popup');
+  if (helpPopup) {
+    helpPopup.style.display = 'none';
+    document.body.style.overflow = ''; // Resume Scrolling
+  }
+}
 }

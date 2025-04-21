@@ -124,6 +124,125 @@
             </div>
           </ion-item>
 
+          <ion-header [translucent]="true">
+            <ion-toolbar class="custom-toolbar">
+              <ion-title class="page-title">Add new record</ion-title>
+            </ion-toolbar>
+          </ion-header>
+          
+          <ion-content [fullscreen]="true" class="custom-content">
+            <!-- Data table -->
+            <div class="table-wrapper">
+              <div>
+                <ion-button (click)="openModal()" class="add-button" color="primary">
+                  <ion-icon name="add-outline" slot="start"></ion-icon>
+                  Add New Item
+                </ion-button>
+              </div>
+          
+              <div style="width: 100%; height: 30px;"></div>
+          
+              <ion-grid class="data-table">
+                <ion-row class="table-header">
+                  <ion-col size="2.5" class="header-cell">PRODUCT</ion-col>
+                  <ion-col size="1.5" class="header-cell">CATEGORY</ion-col>
+                  <ion-col size="1" class="header-cell numeric">PRICE</ion-col>
+                  <ion-col size="1" class="header-cell numeric">STOCK</ion-col>
+                  <ion-col size="2" class="header-cell">NOTES</ion-col>
+                  <ion-col size="2" class="header-cell">SUPPLIER</ion-col>
+                  <ion-col size="1" class="header-cell">STATUS</ion-col>
+                  <ion-col size="1" class="header-cell action-cell">ACTIONS</ion-col>
+                </ion-row>
+          
+                <ion-row *ngFor="let item of items" class="table-row" [class.low-stock]="item.quantity > 0 && item.quantity < 5">
+                  <!-- ... existing table row content ... -->
+                </ion-row>
+              </ion-grid>
+            </div>
+          
+            <!-- Add Modal -->
+            <ion-modal [isOpen]="isModalOpen">
+              <ng-template>
+                <ion-header>
+                  <ion-toolbar>
+                    <ion-title>Add New Item</ion-title>
+                    <ion-buttons slot="end">
+                      <ion-button (click)="closeModal()">Close</ion-button>
+                    </ion-buttons>
+                  </ion-toolbar>
+                </ion-header>
+                <ion-content class="ion-padding">
+                  <form [formGroup]="itemForm" (ngSubmit)="submitForm()">
+                    <ion-item>
+                      <ion-label position="stacked">Product Name</ion-label>
+                      <ion-input formControlName="item_name" type="text" required></ion-input>
+                      <div class="error-message" *ngIf="itemForm.get('item_name')?.touched && itemForm.get('item_name')?.invalid">
+                        Product name is required and cannot contain numbers.
+                      </div>
+                    </ion-item>
+          
+                    <ion-item>
+                      <ion-label position="stacked">Category</ion-label>
+                      <ion-select formControlName="category" interface="action-sheet" required>
+                        <ion-select-option *ngFor="let category of categories" [value]="category">{{ category }}</ion-select-option>
+                      </ion-select>
+                      <div class="error-message" *ngIf="itemForm.get('category')?.touched && itemForm.get('category')?.invalid">
+                        Category is required.
+                      </div>
+                    </ion-item>
+          
+                    <ion-item>
+                      <ion-label position="stacked">Price</ion-label>
+                      <ion-input formControlName="price" type="number" required></ion-input>
+                      <div class="error-message" *ngIf="itemForm.get('price')?.touched && itemForm.get('price')?.invalid">
+                        Valid price is required (must be a number and greater than or equal to 0).
+                      </div>
+                    </ion-item>
+          
+                    <ion-item>
+                      <ion-label position="stacked">Stock Quantity</ion-label>
+                      <ion-input formControlName="quantity" type="number" required></ion-input>
+                      <div class="error-message" *ngIf="itemForm.get('quantity')?.touched && itemForm.get('quantity')?.invalid">
+                        Valid quantity is required (must be a number and greater than or equal to 0).
+                      </div>
+                    </ion-item>
+          
+                    <ion-item>
+                      <ion-label position="stacked">Notes</ion-label>
+                      <ion-input formControlName="special_note" type="text"></ion-input>
+                    </ion-item>
+          
+                    <ion-item>
+                      <ion-label position="stacked">Supplier</ion-label>
+                      <ion-input formControlName="supplier_name" type="text" required></ion-input>
+                      <div class="error-message" *ngIf="itemForm.get('supplier_name')?.touched && itemForm.get('supplier_name')?.invalid">
+                        Supplier name is required and cannot contain numbers.
+                      </div>
+                    </ion-item>
+          
+                    <ion-item>
+                      <ion-label position="stacked">Status</ion-label>
+                      <ion-select formControlName="stock_status" interface="action-sheet" required>
+                        <ion-select-option *ngFor="let status of statusOptions" [value]="status">
+                          {{ status }}
+                        </ion-select-option>
+                      </ion-select>
+                      <div class="error-message" *ngIf="itemForm.get('stock_status')?.touched && itemForm.get('stock_status')?.invalid">
+                        Status is required.
+                      </div>
+                    </ion-item>
+          
+                    <div class="ion-padding">
+                      <ion-button expand="block" type="submit" [disabled]="!itemForm.valid">Submit</ion-button>
+                      <ion-button expand="block" color="medium" (click)="closeModal()">Cancel</ion-button>
+                    </div>
+                  </form>
+                </ion-content>
+              </ng-template>
+            </ion-modal>
+          </ion-content>
+          
+
           <div class="ion-padding">
             <ion-button expand="block" type="submit" [disabled]="!itemForm.valid">Submit</ion-button>
             <ion-button expand="block" color="medium" (click)="closeModal()">Cancel</ion-button>
@@ -134,12 +253,12 @@
   </ion-modal>
 </ion-content>
 
-<!-- 帮助按钮 -->
+
 <div class="help-button-floating" (click)="showHelpPopup()">
-  <ion-icon name="help-circle" class="icon">222222222222</ion-icon>
+  <ion-icon name="help-circle" class="icon"></ion-icon>
 </div>
 
-<!-- 帮助弹窗 -->
+
 <div id="help-popup" class="help-popup">
   <div class="popup-content">
     <h2>Help Information</h2>
